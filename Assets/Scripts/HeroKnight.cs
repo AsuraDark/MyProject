@@ -8,8 +8,6 @@ public class HeroKnight : MonoBehaviour
     private HeroKnightMovement _heroKnightMovement;
     private Animator _animator;
 
-    private readonly int RunTrigger = Animator.StringToHash("Run");
-    private readonly int JumpTrigger = Animator.StringToHash("Jump");
     private readonly string MoveVelocity = nameof(MoveVelocity);
     private readonly string JumpVelocity = nameof(JumpVelocity);
 
@@ -44,7 +42,6 @@ public class HeroKnight : MonoBehaviour
         if(_isIdle == true && Mathf.Abs(moveVelocity) > 0)
         {
             _isIdle = false;
-            _animator.SetTrigger(RunTrigger);
         }
         else if(moveVelocity == 0)
         {
@@ -54,12 +51,11 @@ public class HeroKnight : MonoBehaviour
 
     private void PlayAnimationJump(float jumpVelocity)
     {
-        _animator.SetFloat(MoveVelocity, Mathf.Abs(jumpVelocity));
+        _animator.SetFloat(JumpVelocity, Mathf.Abs(jumpVelocity));
 
         if (_isIdle == true && Mathf.Abs(jumpVelocity) > 0)
         {
             _isIdle = false;
-            _animator.SetTrigger(JumpTrigger);
         }
         else if (jumpVelocity == 0)
         {
