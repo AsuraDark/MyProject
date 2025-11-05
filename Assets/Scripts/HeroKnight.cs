@@ -1,66 +1,40 @@
+using System;
 using UnityEngine;
 
-[RequireComponent(typeof(HeroKnightMovement), typeof(Animator))]
+[RequireComponent(typeof(HeroKnightMovement), typeof(InputReader), typeof(HeroKnightAnimation))]
 public class HeroKnight : MonoBehaviour
 {
     [SerializeField] private CoinDetector _coinDetector;
 
     private HeroKnightMovement _heroKnightMovement;
-    private Animator _animator;
-
-    private readonly string MoveVelocity = nameof(MoveVelocity);
-    private readonly string JumpVelocity = nameof(JumpVelocity);
-
-    private bool _isIdle = true;
+    private HeroKnightAnimation _heroKnightAnimation;
+    private InputReader _inputReader;
 
     private int _countCoin = 0;
 
     private void Awake()
     {
         _heroKnightMovement = GetComponent<HeroKnightMovement>();
-        _animator = GetComponent<Animator>();
+        _inputReader = GetComponent<InputReader>();
+        _heroKnightAnimation = GetComponent<HeroKnightAnimation>();
     }
 
     private void OnEnable()
     {
-        _heroKnightMovement.MovedHeroKnight += PlayAnimationRun;
-        _heroKnightMovement.JumpedHeroKnight += PlayAnimationJump;
+        _inputReader.ClickedAnyDirection += _heroKnightMovement.Move;
+        _inputReader.ClickedAnyDirection += _heroKnightAnimation.PlayAnimationRun;
+        _inputReader.ClickedUpDirection += _heroKnightMovement.Jump;
+        _inputReader.ClickedUpDirection += _heroKnightAnimation.PlayAnimationJump;
         _coinDetector.DetectedCoin += IncreaseCountCoin;
     }
 
     private void OnDisable()
     {
-        _heroKnightMovement.MovedHeroKnight -= PlayAnimationRun;
-        _heroKnightMovement.JumpedHeroKnight -= PlayAnimationJump;
+        _inputReader.ClickedAnyDirection -= _heroKnightMovement.Move;
+        _inputReader.ClickedAnyDirection -= _heroKnightAnimation.PlayAnimationRun;
+        _inputReader.ClickedUpDirection -= _heroKnightMovement.Jump;
+        _inputReader.ClickedUpDirection -= _heroKnightAnimation.PlayAnimationJump;
         _coinDetector.DetectedCoin -= IncreaseCountCoin;
-    }
-
-    private void PlayAnimationRun(float moveVelocity)
-    {
-        _animator.SetFloat(MoveVelocity, Mathf.Abs(moveVelocity));
-
-        if(_isIdle == true && Mathf.Abs(moveVelocity) > 0)
-        {
-            _isIdle = false;
-        }
-        else if(moveVelocity == 0)
-        {
-            _isIdle = true;
-        }
-    }
-
-    private void PlayAnimationJump(float jumpVelocity)
-    {
-        _animator.SetFloat(JumpVelocity, Mathf.Abs(jumpVelocity));
-
-        if (_isIdle == true && Mathf.Abs(jumpVelocity) > 0)
-        {
-            _isIdle = false;
-        }
-        else if (jumpVelocity == 0)
-        {
-            _isIdle = true;
-        }
     }
 
     private void IncreaseCountCoin()
