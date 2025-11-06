@@ -8,4 +8,9 @@ public class HealthComponent : MonoBehaviour
     {
         _health -= damage;
     }
+
+    public void Heal(float heal)
+    {
+        _health += heal;
+    }
 }

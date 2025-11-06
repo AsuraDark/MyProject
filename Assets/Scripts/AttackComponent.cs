@@ -11,14 +11,7 @@ public class AttackComponent : MonoBehaviour
     {
         if (Time.time >= _time || _time == 0)
         {
-            if (_damage < 0)
-            {
-                health.TakeDamage(-_damage);
-            }
-            else
-            {
-                health.TakeDamage(_damage);
-            }
+            health.TakeDamage(_damage);
 
             _time = Time.time + _attackDelay;
         }

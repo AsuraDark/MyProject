@@ -33,7 +33,7 @@ public class HeroKnight : MonoBehaviour
         _inputReader.ClickedUpDirection += _heroKnightAnimation.PlayAnimationJump;
         _coinDetector.DetectedCoin += IncreaseCountCoin;
         _healthDetector.DetectedHealth += _attackComponent.Attack;
-        _firstAidKitDetector.DetectedFirstAidKit += Heal;
+        _firstAidKitDetector.DetectedFirstAidKit += _healthComponent.Heal;
     }
 
     private void OnDisable()
@@ -44,17 +44,12 @@ public class HeroKnight : MonoBehaviour
         _inputReader.ClickedUpDirection -= _heroKnightAnimation.PlayAnimationJump;
         _coinDetector.DetectedCoin -= IncreaseCountCoin;
         _healthDetector.DetectedHealth -= _attackComponent.Attack;
-        _firstAidKitDetector.DetectedFirstAidKit -= Heal;
+        _firstAidKitDetector.DetectedFirstAidKit -= _healthComponent.Heal;
     }
 
     private void IncreaseCountCoin()
     {
         _countCoin++;
         Debug.LogFormat("Количество монет:{0}", _countCoin);
-    }
-
-    private void Heal(float heal)
-    {
-        _healthComponent.TakeDamage(heal);
     }
 }
