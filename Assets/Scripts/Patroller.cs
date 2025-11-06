@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Patroller : MonoBehaviour
@@ -10,15 +9,57 @@ public class Patroller : MonoBehaviour
 
     private int _currentIndexPosition = 0;
 
-    private void Update()
+    public IEnumerator StartPatroll()
     {
-        Vector3 direction = (_targetPositions[_currentIndexPosition] - transform.position).normalized;
-
-        transform.Translate(_speed * Time.deltaTime * direction);
-
-        if (Mathf.Abs(_targetPositions[_currentIndexPosition].x - transform.position.x) <= _maxInaccuracy)
+        while (enabled)
         {
-            _currentIndexPosition = ++_currentIndexPosition % _targetPositions.Length;
+            if (_targetPositions.Length == 0)
+                yield return null;
+
+            if (Mathf.Abs(_targetPositions[_currentIndexPosition].x - transform.position.x) <= _maxInaccuracy)
+            {
+                if (_targetPositions.Length == 1)
+                    yield return null;
+
+                _currentIndexPosition = ++_currentIndexPosition % _targetPositions.Length;
+
+                ChangeRotation(_targetPositions[_currentIndexPosition]);
+            }
+
+            Vector3 direction = ChangeDirection(_targetPositions[_currentIndexPosition]);
+
+            transform.Translate(_speed * Time.deltaTime * direction);
+            yield return null;
         }
+    }
+
+    public IEnumerator StartFollowTarget(Vector3 target)
+    {
+        while (enabled)
+        {
+            Vector3 direction = ChangeDirection(target);
+
+            transform.Translate(_speed * Time.deltaTime * direction);
+            yield return null;
+        }
+    }
+
+    private void ChangeRotation(Vector3 target)
+    {
+        if (target.x < transform.position.x && transform.eulerAngles.y == 180)
+        {
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0, transform.eulerAngles.z);
+            _speed = -_speed;
+        }
+        else if (target.x > transform.position.x)
+        {
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, 180, transform.eulerAngles.z);
+            _speed = -_speed;
+        }
+    }
+
+    private Vector3 ChangeDirection(Vector3 target)
+    {
+        return (target - transform.position).normalized;
     }
 }
