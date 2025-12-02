@@ -9,14 +9,12 @@ public class SliderVolumeChanger : MonoBehaviour
 
     private Slider _volumeSlider;
 
+    private float _volumeModificator = 20;
+    private float _minVolume = -80;
+
     private void Awake()
     {
         _volumeSlider = GetComponent<Slider>();
-    }
-
-    private void Start()
-    {
-        _volumeSlider.value = Mathf.Pow(10, (GetMixerVolume() / 20));
     }
 
     private void OnEnable()
@@ -28,10 +26,20 @@ public class SliderVolumeChanger : MonoBehaviour
     {
         _volumeSlider.onValueChanged.RemoveListener(ChangeVolume);
     }
+    private void Start()
+    {
+        _volumeSlider.value = Mathf.Pow(10, (GetMixerVolume() / _volumeModificator));
+    }
 
     public void ChangeVolume(float volume)
     {
-        SetMixerVolume(Mathf.Log10(volume) * 20);
+        if( volume == 0)
+        {
+            SetMixerVolume(_minVolume);
+            return;
+        }
+
+        SetMixerVolume(Mathf.Log10(volume) * _volumeModificator);
     }
 
     private float GetMixerVolume()
