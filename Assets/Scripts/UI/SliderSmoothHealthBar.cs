@@ -18,8 +18,8 @@ public class SliderSmoothHealthBar : HealthBar
 
     private void Start()
     {
-        _healthSlider.maxValue = HealthComponent.MaxHealth;
-        _healthSlider.minValue = HealthComponent.MinHealth;
+        _healthSlider.maxValue = HealthComponent.MaxValue;
+        _healthSlider.minValue = HealthComponent.MinValue;
         _healthSlider.value = _healthSlider.maxValue;
     }
 

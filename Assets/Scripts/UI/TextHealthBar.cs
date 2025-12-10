@@ -13,6 +13,6 @@ public class TextHealthBar : HealthBar
 
     protected override void ShowHealth(float health)
     {
-        _textMeshPro.text = new string($"{health}/{HealthComponent.MaxHealth}");
+        _textMeshPro.text = new string($"{health}/{HealthComponent.MaxValue}");
     }
 }

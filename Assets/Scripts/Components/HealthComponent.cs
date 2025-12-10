@@ -3,30 +3,30 @@ using UnityEngine;
 
 public class HealthComponent : MonoBehaviour
 {
-    [SerializeField] private float _health;
-    [SerializeField] private float _maxHealth;
+    [SerializeField] private float _value;
+    [SerializeField] private float _maxValue;
 
-    public float MinHealth { private set; get; } = 0;
-    public float MaxHealth
+    public float MinValue { private set; get; } = 0;
+    public float MaxValue
     {
-        get { return _maxHealth; }
-        private set { _maxHealth = value; }
+        get { return _maxValue; }
+        private set { _maxValue = value; }
     }
 
-    public event Action<float> ChangedHealth;
+    public event Action<float> ChangedValue;
 
     private void Start()
     {
-        if (_health < MinHealth)
+        if (_value < MinValue)
         {
-            _health = MinHealth;
+            _value = MinValue;
         }
-        else if (_health > MaxHealth)
+        else if (_value > MaxValue)
         {
-            _health = MaxHealth;
+            _value = MaxValue;
         }
 
-        ChangedHealth(_health);
+        ChangedValue(_value);
     }
 
     public void TakeDamage(float damage)
@@ -41,14 +41,14 @@ public class HealthComponent : MonoBehaviour
             damage = -damage;
         }
 
-        _health -= damage;
+        _value -= damage;
 
-        if (_health < MinHealth)
+        if (_value < MinValue)
         {
-            _health = MinHealth;
+            _value = MinValue;
         }
 
-        ChangedHealth(_health);
+        ChangedValue(_value);
     }
 
     public void Heal(float heal)
@@ -63,13 +63,13 @@ public class HealthComponent : MonoBehaviour
             heal = -heal;
         }
 
-        _health += heal;
+        _value += heal;
 
-        if (_health > MaxHealth)
+        if (_value > MaxValue)
         {
-            _health = MaxHealth;
+            _value = MaxValue;
         }
 
-        ChangedHealth(_health);
+        ChangedValue(_value);
     }
 }
