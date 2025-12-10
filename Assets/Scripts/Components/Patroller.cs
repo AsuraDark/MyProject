@@ -33,17 +33,6 @@ public class Patroller : MonoBehaviour
         }
     }
 
-    public IEnumerator StartFollowTarget(Vector3 target)
-    {
-        while (enabled)
-        {
-            Vector3 direction = ChangeDirection(target);
-
-            transform.Translate(_speed * Time.deltaTime * direction);
-            yield return null;
-        }
-    }
-
     private void ChangeRotation(Vector3 target)
     {
         if (target.x < transform.position.x && transform.eulerAngles.y == 180)

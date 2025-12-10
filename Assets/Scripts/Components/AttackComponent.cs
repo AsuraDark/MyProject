@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class AttackComponent : MonoBehaviour
@@ -5,15 +6,27 @@ public class AttackComponent : MonoBehaviour
     [SerializeField] private float _damage;
     [SerializeField] private float _attackDelay;
 
-    private float _time = 0;
+    private Coroutine _coroutine;
 
-    public void Attack(HealthComponent health)
+    public void StartAttack(HealthComponent health)
     {
-        if (Time.time >= _time || _time == 0)
+        _coroutine = StartCoroutine(Attack(health));
+    }
+
+    private IEnumerator Attack(HealthComponent health)
+    {
+        WaitForSeconds waitingTime = new WaitForSeconds(_attackDelay);
+
+        while(enabled)
         {
             health.TakeDamage(_damage);
 
-            _time = Time.time + _attackDelay;
+            yield return waitingTime;
         }
+    }
+
+    public void StopAttack()
+    {
+        StopCoroutine(_coroutine);
     }
 }

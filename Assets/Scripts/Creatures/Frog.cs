@@ -1,8 +1,7 @@
-using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(AttackComponent), typeof(HealthComponent), typeof(Patroller))]
-[RequireComponent(typeof(HeroKnightDetector))]
+[RequireComponent(typeof(HeroKnightDetector), typeof(FollowTargeter))]
 public class Frog : MonoBehaviour
 {
     [SerializeField] private HealthDetector _healthDetector;
@@ -11,6 +10,7 @@ public class Frog : MonoBehaviour
     private AttackComponent _attackComponent;
     private HealthComponent _healthComponent;
     private Patroller _patroller;
+    private FollowTargeter _followTargeter;
     private Coroutine _coroutine;
 
     private HeroKnight _target;
@@ -20,41 +20,44 @@ public class Frog : MonoBehaviour
         _attackComponent = GetComponent<AttackComponent>();
         _healthComponent = GetComponent<HealthComponent>();
         _patroller = GetComponent<Patroller>();
+        _followTargeter = GetComponent<FollowTargeter>();
         _coroutine = StartCoroutine(_patroller.StartPatroll());
     }
 
     private void OnEnable()
     {
-        _healthDetector.DetectedHealth += _attackComponent.Attack;
+        _healthDetector.DetectedHealth += _attackComponent.StartAttack;
+        _healthDetector.MissedHealth += _attackComponent.StopAttack;
         _heroKnightDetector.DetectedHeroKnight += SetTarget;
+        _heroKnightDetector.MissedHeroKnight += ResetTarget;
+        _heroKnightDetector.MissedHeroKnight += StarPatroll;
     }
 
     private void OnDisable()
     {
-        _healthDetector.DetectedHealth -= _attackComponent.Attack;
+        _healthDetector.DetectedHealth -= _attackComponent.StartAttack;
+        _healthDetector.MissedHealth -= _attackComponent.StopAttack;
         _heroKnightDetector.DetectedHeroKnight -= SetTarget;
+        _heroKnightDetector.MissedHeroKnight -= ResetTarget;
+        _heroKnightDetector.MissedHeroKnight -= StarPatroll;
     }
 
     private void SetTarget(HeroKnight target)
     {
-        if(_target == null && target == null)
-        {
-            return;
-        }
-
         _target = target;
 
-        if(target != null)
-        {
-            StopCoroutine(_coroutine);
-            _coroutine = StartCoroutine(_patroller.StartFollowTarget(_target.transform.position));
-        }
-        else
-        {
-            StopCoroutine(_coroutine);
-            _coroutine = StartCoroutine(_patroller.StartPatroll());
-        }
+        StopCoroutine(_coroutine);
+        _coroutine = StartCoroutine(_followTargeter.StartFollowTarget(_target.transform.position));
     }
 
-    
+    private void StarPatroll()
+    {
+        StopCoroutine(_coroutine);
+        _coroutine = StartCoroutine(_patroller.StartPatroll());
+    }
+
+    private void ResetTarget()
+    {
+        _target = null;
+    }
 }

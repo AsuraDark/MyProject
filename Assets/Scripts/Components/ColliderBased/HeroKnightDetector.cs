@@ -4,10 +4,11 @@ using UnityEngine;
 public class HeroKnightDetector : MonoBehaviour
 {
     public event Action<HeroKnight> DetectedHeroKnight;
+    public event Action MissedHeroKnight;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.TryGetComponent<HeroKnight>(out HeroKnight heroKnight))
+        if(collision.TryGetComponent(out HeroKnight heroKnight))
         {
             DetectedHeroKnight?.Invoke(heroKnight);
         }
@@ -15,9 +16,9 @@ public class HeroKnightDetector : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.TryGetComponent<HeroKnight>(out HeroKnight heroKnight))
+        if (collision.TryGetComponent(out HeroKnight heroKnight))
         {
-            DetectedHeroKnight?.Invoke(null);
+            MissedHeroKnight?.Invoke();
         }
     }
 }

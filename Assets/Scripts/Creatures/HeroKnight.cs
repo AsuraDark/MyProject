@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(HeroKnightMovement), typeof(InputReader), typeof(HeroKnightAnimation))]
-[RequireComponent(typeof(AttackComponent), typeof(HealthComponent))]
+[RequireComponent(typeof(HeroKnightAttack), typeof(HealthComponent))]
 public class HeroKnight : MonoBehaviour
 {
     [SerializeField] private CoinDetector _coinDetector;
@@ -10,18 +10,18 @@ public class HeroKnight : MonoBehaviour
 
     private HeroKnightMovement _heroKnightMovement;
     private HeroKnightAnimation _heroKnightAnimation;
+    private HeroKnightAttack _heroKnightAttack;
     private InputReader _inputReader;
-    private AttackComponent _attackComponent;
     private HealthComponent _healthComponent;
 
-    private int _countCoin = 0;
+    private float _countCoin = 0;
 
     private void Awake()
     {
         _heroKnightMovement = GetComponent<HeroKnightMovement>();
         _inputReader = GetComponent<InputReader>();
         _heroKnightAnimation = GetComponent<HeroKnightAnimation>();
-        _attackComponent = GetComponent<AttackComponent>();
+        _heroKnightAttack = GetComponent<HeroKnightAttack>();
         _healthComponent = GetComponent<HealthComponent>();
     }
 
@@ -31,8 +31,10 @@ public class HeroKnight : MonoBehaviour
         _inputReader.ClickedAnyDirection += _heroKnightAnimation.PlayAnimationRun;
         _inputReader.ClickedUpDirection += _heroKnightMovement.Jump;
         _inputReader.ClickedUpDirection += _heroKnightAnimation.PlayAnimationJump;
+        _inputReader.ClickedFButton += _heroKnightAnimation.PlayAnimationAttack;
+        _inputReader.ClickedFButton += StartAttack;
         _coinDetector.DetectedCoin += IncreaseCountCoin;
-        _healthDetector.DetectedHealth += _attackComponent.Attack;
+        _healthDetector.DetectedHealth += Attack;
         _firstAidKitDetector.DetectedFirstAidKit += _healthComponent.Heal;
     }
 
@@ -42,14 +44,31 @@ public class HeroKnight : MonoBehaviour
         _inputReader.ClickedAnyDirection -= _heroKnightAnimation.PlayAnimationRun;
         _inputReader.ClickedUpDirection -= _heroKnightMovement.Jump;
         _inputReader.ClickedUpDirection -= _heroKnightAnimation.PlayAnimationJump;
+        _inputReader.ClickedFButton -= _heroKnightAnimation.PlayAnimationAttack;
         _coinDetector.DetectedCoin -= IncreaseCountCoin;
-        _healthDetector.DetectedHealth -= _attackComponent.Attack;
+        _healthDetector.DetectedHealth -= Attack;
         _firstAidKitDetector.DetectedFirstAidKit -= _healthComponent.Heal;
     }
 
-    private void IncreaseCountCoin()
+    private void Start()
     {
-        _countCoin++;
-        Debug.LogFormat("Количество монет:{0}", _countCoin);
+        _healthDetector.gameObject.SetActive(false);
+    }
+    
+    public void StartAttack()
+    {
+        _healthDetector.gameObject.SetActive(true);
+    }
+
+    private void Attack(HealthComponent health)
+    {
+        _heroKnightAttack.Attack(health);
+        _healthDetector.gameObject.SetActive(false);
+    }
+
+    private void IncreaseCountCoin(float countCoin)
+    {
+        _countCoin += countCoin;
+        Debug.LogFormat($"Количество монет:{_countCoin}");
     }
 }

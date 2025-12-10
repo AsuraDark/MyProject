@@ -5,6 +5,7 @@ public class HeroKnightAnimation : MonoBehaviour
 {
     private readonly string MoveVelocity = nameof(MoveVelocity);
     private readonly string JumpVelocity = nameof(JumpVelocity);
+    private readonly string Attack = nameof(Attack);
 
     private Animator _animator;
 
@@ -41,5 +42,10 @@ public class HeroKnightAnimation : MonoBehaviour
         {
             _isIdle = true;
         }
+    }
+
+    public void PlayAnimationAttack()
+    {
+        _animator.SetTrigger(Attack);
     }
 }

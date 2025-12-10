@@ -7,10 +7,13 @@ public class FirstAidKitDetector : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent<FirstAidKit>(out FirstAidKit firstAidKit))
+        if (collision.TryGetComponent(out CollectableItem firstAidKit))
         {
-            DetectedFirstAidKit?.Invoke(firstAidKit.Heal);
-            Destroy(firstAidKit.gameObject);
+            if(firstAidKit.ItemType == ItemType.FirstAidKit)
+            {
+                DetectedFirstAidKit?.Invoke(firstAidKit.Value);
+                Destroy(firstAidKit.gameObject);
+            }
         }
     }
 }

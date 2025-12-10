@@ -3,14 +3,17 @@ using UnityEngine;
 
 public class CoinDetector : MonoBehaviour
 {
-    public event Action DetectedCoin;
+    public event Action<float> DetectedCoin;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.TryGetComponent<Coin>(out Coin coin))
+        if (collision.TryGetComponent(out CollectableItem coin))
         {
-            Destroy(coin.gameObject);
-            DetectedCoin?.Invoke();
+            if (coin.ItemType == ItemType.Coin)
+            {
+                DetectedCoin?.Invoke(coin.Value);
+                coin.Collect();
+            }
         }
     }
 }

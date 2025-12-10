@@ -8,6 +8,7 @@ public class InputReader : MonoBehaviour
 
     public event Action<float> ClickedAnyDirection;
     public event Action<float> ClickedUpDirection;
+    public event Action ClickedFButton;
 
     private void Update()
     {
@@ -22,6 +23,11 @@ public class InputReader : MonoBehaviour
         if (directionVertical >= 0)
         {
             ClickedUpDirection?.Invoke(directionVertical);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            ClickedFButton?.Invoke();
         }
     }
 }

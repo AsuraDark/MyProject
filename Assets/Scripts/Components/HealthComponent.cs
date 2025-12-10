@@ -31,6 +31,16 @@ public class HealthComponent : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (damage == 0)
+        {
+            return;
+        }
+
+        if (damage < 0)
+        {
+            damage = -damage;
+        }
+
         _health -= damage;
 
         if (_health < MinHealth)
@@ -43,6 +53,16 @@ public class HealthComponent : MonoBehaviour
 
     public void Heal(float heal)
     {
+        if (heal == 0)
+        {
+            return;
+        }
+
+        if (heal < 0)
+        {
+            heal = -heal;
+        }
+
         _health += heal;
 
         if (_health > MaxHealth)
