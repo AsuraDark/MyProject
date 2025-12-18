@@ -9,6 +9,7 @@ public class InputReader : MonoBehaviour
     public event Action<float> ClickedAnyDirection;
     public event Action<float> ClickedUpDirection;
     public event Action ClickedFButton;
+    public event Action ClickedRButton;
 
     private void Update()
     {
@@ -28,6 +29,11 @@ public class InputReader : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F))
         {
             ClickedFButton?.Invoke();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ClickedRButton?.Invoke();
         }
     }
 }

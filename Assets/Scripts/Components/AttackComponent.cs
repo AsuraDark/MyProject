@@ -25,7 +25,7 @@ public class AttackComponent : MonoBehaviour
         }
     }
 
-    public void StopAttack()
+    public void StopAttack(HealthComponent health)
     {
         StopCoroutine(_coroutine);
     }

@@ -6,14 +6,17 @@ public class HealthComponent : MonoBehaviour
     [SerializeField] private float _value;
     [SerializeField] private float _maxValue;
 
+    public event Action<float> ChangedValue;
+
+    public float Value
+    {
+        get { return _value; }
+    }
     public float MinValue { private set; get; } = 0;
     public float MaxValue
     {
         get { return _maxValue; }
-        private set { _maxValue = value; }
     }
-
-    public event Action<float> ChangedValue;
 
     private void Start()
     {
