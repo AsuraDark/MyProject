@@ -6,93 +6,50 @@ using UnityEngine;
 public class Vampirism : MonoBehaviour
 {
     [SerializeField] private float _damage;
-    [SerializeField] private float _timeAction;
-    [SerializeField] private float _recoveryRate;
 
     private List<HealthComponent> _targets = new List<HealthComponent>();
     private HealthComponent _currentTarget;
 
-    private float _timer;
-    private float _recoveryRateModificator;
-
-    private bool _isSpellEnabled = false;
-
     private Coroutine _coroutine;
 
     public event Action<float> StealedHealth;
-    public event Action<float> ChangedTimer;
-    public event Action EnabledSpell;
-    public event Action DisabledSpell;
 
-    public float Timer
+    public void Cast()
     {
-        get { return _timer; }
-    }
-
-    public float TimeAction
-    {
-        get { return _timeAction; }
-    }
-
-    private void Start()
-    {
-        _timer = _timeAction;
-        _recoveryRateModificator = _timeAction / _recoveryRate;
-    }
-
-    private void Update()
-    {
-        if (_isSpellEnabled)
+        if(_coroutine != null)
         {
-            ChangeTarget();
-            _timer -= Time.deltaTime;
-            ChangedTimer?.Invoke(_timer);
-
-            if (_timer <= 0)
-            {
-                _isSpellEnabled = false;
-                _currentTarget = null;
-                DisabledSpell?.Invoke();
-
-                if (_coroutine != null)
-                {
-                    StopCoroutine(_coroutine);
-                }
-            }
+            _coroutine = null;
         }
 
-        if (_isSpellEnabled == false && _timer <= TimeAction)
-        {
-            _timer += Time.deltaTime * _recoveryRateModificator;
-            ChangedTimer?.Invoke(_timer);
-        }
+        _coroutine = StartCoroutine(StealHealth());
     }
 
-    private IEnumerator StealHealth(HealthComponent health)
+    public void StopCast()
+    {
+        StopCoroutine(_coroutine);
+    }
+
+    private IEnumerator StealHealth()
     {
         while (enabled)
         {
-            if (health.Value <= _damage)
-            {
-                health.TakeDamage(health.Value * Time.deltaTime);
-                StealedHealth(health.Value * Time.deltaTime);
-            }
-            else
-            {
-                health.TakeDamage(_damage * Time.deltaTime);
-                StealedHealth(_damage * Time.deltaTime);
-            }
+            ChangeTarget();
 
+            if (_currentTarget != null)
+            {
+                if (_currentTarget.Value <= _damage)
+                {
+                    _currentTarget.TakeDamage(_currentTarget.Value * Time.deltaTime);
+                    StealedHealth(_currentTarget.Value * Time.deltaTime);
+                }
+                else
+                {
+                    _currentTarget.TakeDamage(_damage * Time.deltaTime);
+                    StealedHealth(_damage * Time.deltaTime);
+                }
+            }
+            
             yield return null;
-        }
-    }
-
-    public void EnableSpell()
-    {
-        if (_isSpellEnabled == false && _timer >= _timeAction)
-        {
-            _isSpellEnabled = true;
-            EnabledSpell?.Invoke();
         }
     }
 
@@ -110,6 +67,11 @@ public class Vampirism : MonoBehaviour
     {
         if (_targets.Count == 0)
         {
+            if(_currentTarget != null)
+            {
+                _currentTarget = null;
+            }
+
             return;
         }
 
@@ -121,7 +83,7 @@ public class Vampirism : MonoBehaviour
             }
 
             _currentTarget = _targets[_targets.Count - 1];
-            _coroutine = StartCoroutine(StealHealth(_currentTarget));
+            _coroutine = StartCoroutine(StealHealth());
         }
 
         else if (_targets.Count > 0 && _currentTarget != GetNearestTarget())
@@ -132,7 +94,7 @@ public class Vampirism : MonoBehaviour
             }
 
             _currentTarget = GetNearestTarget();
-            _coroutine = StartCoroutine(StealHealth(_currentTarget));
+            _coroutine = StartCoroutine(StealHealth());
         }
     }
 

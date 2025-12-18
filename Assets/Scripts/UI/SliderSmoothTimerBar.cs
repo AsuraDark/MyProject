@@ -3,23 +3,23 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Slider))]
-public class SliderSmoothVampirismBar : VampirismBar
+public class SliderSmoothTimerBar : TimerBar
 {
     [SerializeField] private float _recoveryRate;
 
-    private Slider _vampirismSlider;
+    private Slider _timerSlider;
 
     private Coroutine _coroutine;
 
     private void Awake()
     {
-        _vampirismSlider = GetComponent<Slider>();
+        _timerSlider = GetComponent<Slider>();
     }
 
     private void Start()
     {
-        _vampirismSlider.maxValue = Vampirism.TimeAction;
-        _vampirismSlider.value = _vampirismSlider.maxValue;
+        _timerSlider.maxValue = _timer.TimeAction;
+        _timerSlider.value = _timerSlider.maxValue;
     }
 
     protected override void ShowValue(float health)
@@ -34,9 +34,9 @@ public class SliderSmoothVampirismBar : VampirismBar
 
     private IEnumerator ChangeValue(float value)
     {
-        while (_vampirismSlider.value != value)
+        while (_timerSlider.value != value)
         {
-            _vampirismSlider.value = Mathf.MoveTowards(_vampirismSlider.value, value, _recoveryRate * Time.deltaTime);
+            _timerSlider.value = Mathf.MoveTowards(_timerSlider.value, value, _recoveryRate * Time.deltaTime);
             yield return null;
         }
     }

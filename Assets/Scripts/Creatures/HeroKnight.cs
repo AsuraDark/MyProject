@@ -2,6 +2,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(HeroKnightMovement), typeof(InputReader), typeof(HeroKnightAnimation))]
 [RequireComponent(typeof(HeroKnightAttack), typeof(HealthComponent), typeof(Vampirism))]
+[RequireComponent(typeof(CustomTimer))]
 public class HeroKnight : MonoBehaviour
 {
     [SerializeField] private CoinDetector _coinDetector;
@@ -15,6 +16,7 @@ public class HeroKnight : MonoBehaviour
     private InputReader _inputReader;
     private HealthComponent _healthComponent;
     private Vampirism _vampirism;
+    private CustomTimer _vampirismTimer;
 
     private float _countCoin = 0;
 
@@ -26,6 +28,7 @@ public class HeroKnight : MonoBehaviour
         _heroKnightAttack = GetComponent<HeroKnightAttack>();
         _healthComponent = GetComponent<HealthComponent>();
         _vampirism = GetComponent<Vampirism>();
+        _vampirismTimer = GetComponent<CustomTimer>();
     }
 
     private void OnEnable()
@@ -36,15 +39,17 @@ public class HeroKnight : MonoBehaviour
         _inputReader.ClickedUpDirection += _heroKnightAnimation.PlayAnimationJump;
         _inputReader.ClickedFButton += _heroKnightAnimation.PlayAnimationAttack;
         _inputReader.ClickedFButton += StartAttack;
-        _inputReader.ClickedRButton += _vampirism.EnableSpell;
+        _inputReader.ClickedRButton += _vampirismTimer.StartTimer;
+        _inputReader.ClickedRButton += _vampirism.Cast;
         _coinDetector.DetectedCoin += IncreaseCountCoin;
         _attackRange.DetectedHealth += Attack;
         _firstAidKitDetector.DetectedFirstAidKit += _healthComponent.Heal;
         _vampirismRange.DetectedHealth += _vampirism.AddTarget;
         _vampirismRange.MissedHealth += _vampirism.RemoveTarget;
         _vampirism.StealedHealth += _healthComponent.Heal;
-        _vampirism.EnabledSpell += EnableVampirism;
-        _vampirism.DisabledSpell += DisableVampirism;
+        _vampirismTimer.StartedTimer += EnableVampirism;
+        _vampirismTimer.StoppedTimer += DisableVampirism;
+        _vampirismTimer.StoppedTimer += _vampirism.StopCast;
     }
 
     private void OnDisable()
@@ -55,15 +60,17 @@ public class HeroKnight : MonoBehaviour
         _inputReader.ClickedUpDirection -= _heroKnightAnimation.PlayAnimationJump;
         _inputReader.ClickedFButton -= _heroKnightAnimation.PlayAnimationAttack;
         _inputReader.ClickedFButton -= StartAttack;
-        _inputReader.ClickedRButton -= _vampirism.EnableSpell;
+        _inputReader.ClickedRButton -= _vampirismTimer.StartTimer;
+        _inputReader.ClickedRButton -= _vampirism.Cast;
         _coinDetector.DetectedCoin -= IncreaseCountCoin;
         _attackRange.DetectedHealth -= Attack;
         _firstAidKitDetector.DetectedFirstAidKit -= _healthComponent.Heal;
         _vampirismRange.DetectedHealth -= _vampirism.AddTarget;
         _vampirismRange.MissedHealth -= _vampirism.RemoveTarget;
         _vampirism.StealedHealth -= _healthComponent.Heal;
-        _vampirism.EnabledSpell -= EnableVampirism;
-        _vampirism.DisabledSpell -= DisableVampirism;
+        _vampirismTimer.StartedTimer -= EnableVampirism;
+        _vampirismTimer.StoppedTimer -= DisableVampirism;
+        _vampirismTimer.StoppedTimer -= _vampirism.StopCast;
     }
 
     private void Start()
