@@ -1,0 +1,23 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ScoreCounter : MonoBehaviour
+{
+    private int _score = 0;
+
+    public event Action<int> ScoreChanged;
+
+    public void Add()
+    {
+        _score++;
+        ScoreChanged?.Invoke(_score);
+    }
+
+    public void Reset()
+    {
+        _score = 0;
+        ScoreChanged?.Invoke(_score);
+    }
+}
