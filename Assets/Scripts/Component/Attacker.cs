@@ -1,42 +1,32 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(ProjectileSpawnerAutomatic))]
 public class Attacker : MonoBehaviour
 {
-    [SerializeField] protected float _delay;
-    [SerializeField] private Transform _attackRange;
-    [SerializeField] private ObjectPool<Projectile> _pool;
-
-    private SpriteRenderer _spriteRenderer;
+    private ProjectileSpawnerAutomatic _projectileGenerator;
 
     private void Awake()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _projectileGenerator = GetComponent<ProjectileSpawnerAutomatic>();
     }
 
-    public void Attack()
+    private void OnEnable()
     {
-        Projectile newObject = _pool.GetObject();
-        newObject.ChangeDirection(_spriteRenderer.flipX);
-
-        newObject.gameObject.SetActive(true);
-        newObject.transform.position = _attackRange.position;
+        StartAttack();
+    }
+    private void OnDisable()
+    {
+        StopAttack();
     }
 
-    private void Start()
+    public void StartAttack()
     {
-        StartCoroutine(GenerateProjectiles());
+        _projectileGenerator.StartSpawn();
     }
 
-    protected IEnumerator GenerateProjectiles()
+    public void StopAttack()
     {
-        var wait = new WaitForSeconds(_delay);
-
-        while (enabled)
-        {
-            Attack();
-            yield return wait;
-        }
+        _projectileGenerator.StopSpawn();
     }
 }

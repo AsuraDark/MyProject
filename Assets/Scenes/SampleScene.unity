@@ -826,9 +826,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72008be676fc93a429747f4288d39de2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackRange: {fileID: 2078699574}
-  _pool: {fileID: 135758448}
-  _direction: 0
 --- !u!114 &135758447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -850,10 +847,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 135758434}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47c6718059c99494abbf5d0901a21704, type: 3}
+  m_Script: {fileID: 11500000, guid: 6fe998aabbb0b164fbd1734bb7e3092b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 7230044466046770281, guid: 9322d1b415149b745b3dce4d4e2aeba1, type: 3}
+  Prefab: {fileID: 7230044466046770281, guid: 9322d1b415149b745b3dce4d4e2aeba1, type: 3}
+  Delay: 2
+  _spawnPosition: {fileID: 2078699574}
 --- !u!1 &195083737
 GameObject:
   m_ObjectHideFlags: 0
@@ -1097,7 +1096,6 @@ GameObject:
   m_Component:
   - component: {fileID: 526160564}
   - component: {fileID: 526160566}
-  - component: {fileID: 526160567}
   m_Layer: 0
   m_Name: EnemyGenerator
   m_TagString: Untagged
@@ -1132,23 +1130,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d31d6b1456f2345a5d491bd5ffdb40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _delay: 5
+  Prefab: {fileID: 4094971261484082180, guid: 090d1038618b6bb4ca40a3c35763cabc, type: 3}
+  Delay: 2
   _lowerBound: -2
   _upperBound: 2
-  _pool: {fileID: 526160567}
---- !u!114 &526160567
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 526160562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d129f1e38f6fc7e408e2e8b7b414c54f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _prefab: {fileID: 4094971261484082180, guid: 090d1038618b6bb4ca40a3c35763cabc, type: 3}
 --- !u!1 &733151888
 GameObject:
   m_ObjectHideFlags: 0

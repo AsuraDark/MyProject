@@ -6,12 +6,11 @@ public class ObjectRemover : MonoBehaviour
     {
         if (other.TryGetComponent(out Enemy enemy))
         {
-            enemy.DestroyObject(enemy);
+            enemy.DestroyObj();
         }
-
         else if (other.TryGetComponent(out Projectile projectile))
         {
-            projectile.DestroyObject(projectile);
+            projectile.DestroyObj();
         }
     }
 }

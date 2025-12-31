@@ -1,12 +1,12 @@
 using System;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IInteractable
+public class Enemy : Interactable
 {
     public event Action<Enemy> ObjectDestroyed;
 
-    public void DestroyObject(Enemy enemy)
+    public void DestroyObj()
     {
-        ObjectDestroyed?.Invoke(enemy);
+        ObjectDestroyed?.Invoke(this);
     }
 }

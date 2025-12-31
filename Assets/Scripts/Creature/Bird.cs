@@ -39,7 +39,7 @@ public class Bird : MonoBehaviour
         _inputReader.ClickedButtonR -= _birdAttacker.Attack;
     }
 
-    private void ProcessCollision(IInteractable interactable)
+    private void ProcessCollision(Interactable interactable)
     {
         if (interactable is Enemy || interactable is Ground || interactable is Projectile)
         {

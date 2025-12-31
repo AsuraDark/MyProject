@@ -1,25 +1,17 @@
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent (typeof(ProjectileSpawner))]
 public class BirdAttacker : MonoBehaviour
 {
-    [SerializeField] private Transform _attackRange;
-    [SerializeField] private ObjectPool<Projectile> _pool;
-    [SerializeField] private bool _direction;
-
-    private SpriteRenderer _spriteRenderer;
+    private ProjectileSpawner _projectileGenerator;
 
     private void Awake()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _projectileGenerator = GetComponent<ProjectileSpawner>();
     }
 
     public void Attack()
     {
-        Projectile newObject = _pool.GetObject();
-        newObject.ChangeDirection(_spriteRenderer.flipX);
-
-        newObject.gameObject.SetActive(true);
-        newObject.transform.position = _attackRange.position;
+        _projectileGenerator.Spawn();
     }
 }

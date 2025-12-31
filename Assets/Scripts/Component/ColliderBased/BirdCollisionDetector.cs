@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BirdCollisionDetector : MonoBehaviour
 {
-    public event Action<IInteractable> CollisionDetected;
+    public event Action<Interactable> CollisionDetected;
 
     private void OnValidate()
     {
@@ -12,7 +12,7 @@ public class BirdCollisionDetector : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.TryGetComponent(out IInteractable interactable))
+        if(collision.TryGetComponent(out Interactable interactable))
         {
             CollisionDetected?.Invoke(interactable);
         }

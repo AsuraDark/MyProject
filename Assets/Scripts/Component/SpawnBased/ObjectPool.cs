@@ -1,22 +1,31 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ObjectPool<T> : MonoBehaviour
+public class ObjectPool<T> where T : Interactable
 {
-    [SerializeField] protected T _prefab;
+    private Queue<T> _pool;
 
-    protected Queue<T> _pool;
+    public int Length => _pool.Count;
 
-    public IEnumerable<T> PooledObjects => _pool;
-
-    private void Awake()
+    public void Init()
     {
         _pool = new Queue<T>();
     }
 
-    public abstract T GetObject();
+    public T GetObject()
+    {
+        T newObject;
 
-    public abstract void PutObject(T newObject);
+        newObject = _pool.Dequeue();
+
+        return newObject;
+    }
+
+    public void PutObject(T newObject)
+    {
+        _pool.Enqueue(newObject);
+    }
 
     public void Reset()
     {
